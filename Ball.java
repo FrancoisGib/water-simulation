@@ -19,7 +19,10 @@ public class Ball {
     }
 
     public void tick() {
-        this.vy += Board.GRAVITATION * Board.DELTA_TIME;
+        if (Board.gravity)
+            this.vy += Board.GRAVITATION * Board.DELTA_TIME;
+        else
+            this.vy = 0;
         this.vx *= Math.cos(Math.toRadians(directionX));
         float newY = this.y + this.vy * Board.DELTA_TIME;
         float newX = this.x + this.vx * Board.DELTA_TIME;

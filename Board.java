@@ -17,9 +17,12 @@ public class Board extends JPanel implements ActionListener, KeyListener {
     public static final float GRAVITATION = 0.981f / 1000;
     public static final int WIDTH = 540;
     public static final int HEIGHT = 540;
-    private static final int COLUMNS = (int)(WIDTH / Math.sqrt(Ball.SIZE));
-    private static final int ROWS = (int)(HEIGHT / Math.sqrt(Ball.SIZE));
+    private static final int COLUMNS = (int)(WIDTH / (Ball.SIZE * 2));
+    private static final int ROWS = (int)(HEIGHT / (Ball.SIZE * 2));
     private int cpt = 0;
+    private boolean showGrid = false;
+    public static boolean gravity = true;
+    private boolean generate = false;
 
     private List<Ball> balls = new ArrayList<>();
 
@@ -37,7 +40,7 @@ public class Board extends JPanel implements ActionListener, KeyListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         this.cpt++;
-        if (this.cpt > 2 * FPS) {
+        if (this.cpt > 2 * FPS && this.generate) {
             this.cpt = 0;
             int defaultX = (int)(Math.random() * (WIDTH * .9f) + (.1f * WIDTH));
             for (int i = 0; i < 1000; i++) {
@@ -83,10 +86,12 @@ public class Board extends JPanel implements ActionListener, KeyListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.setColor(Color.BLUE);
-        /*for (int i = 0; i < COLUMNS; i++) {
-            g.drawLine(0, i * HEIGHT / COLUMNS, WIDTH, i * HEIGHT / COLUMNS);
-            g.drawLine(i * WIDTH / ROWS, 0, i * WIDTH / ROWS, HEIGHT);
-        }*/
+        if (this.showGrid) {
+            for (int i = 0; i < COLUMNS; i++) {
+                g.drawLine(0, i * HEIGHT / COLUMNS, WIDTH, i * HEIGHT / COLUMNS);
+                g.drawLine(i * WIDTH / ROWS, 0, i * WIDTH / ROWS, HEIGHT);
+            }
+        }
         for (Ball ball : balls) {
             ball.draw(g, this);
         }
@@ -99,6 +104,12 @@ public class Board extends JPanel implements ActionListener, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_S)
+            this.showGrid = !this.showGrid;
+        else if (e.getKeyCode() == KeyEvent.VK_G)
+            Board.gravity = !Board.gravity;
+        else if (e.getKeyCode() == KeyEvent.VK_N)
+            this.generate = !this.generate;
     }
 
     @Override
